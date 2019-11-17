@@ -12,7 +12,6 @@ import Login from "./components/general/Login";
 import NewFeature from './components/features/NewFeature';
 import Header from "./components/general/Header";
 
-// this exists so we can namespace everything by /react
 const Routes = ({ match, history }) => {
   return (
     <React.Fragment>

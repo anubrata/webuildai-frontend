@@ -18,7 +18,7 @@ class Overview extends React.Component {
                       </p>;
     let button =  <a
                     className="next-button"
-                    onClick={() => this.props.history.push('/react/feature_selection/')}
+                    onClick={() => this.props.history.push('/feature_selection/')}
                     style={{ marginTop:"3%" }}
                   >
                     NEXT
@@ -34,7 +34,7 @@ class Overview extends React.Component {
                     </p>;
       button =  <a
                   className="next-button"
-                  onClick={() => this.props.history.push('/react/feature_selection/new')}
+                  onClick={() => this.props.history.push('/feature_selection/new')}
                   style={{ marginTop:"3%" }}
                 >
                   NEXT

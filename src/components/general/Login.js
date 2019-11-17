@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ACTION_TYPES } from '../../store';
+import { API } from '../../api';
 
 class LoginComponent extends React.Component {
 
@@ -25,20 +26,12 @@ class LoginComponent extends React.Component {
   login = () => {
     const request = { auth: { id: this.state.id, password: this.state.password } };
     console.log(request)
-    fetch("/api/v1/sessions/login", {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    })
-    .then(response => response.json())
+    API.login(request)
     .then(result => {
       if (result.status === 'ok') {
         this.props.setLogin();
         this.props.setParticipantId(Number(this.state.id));
-        this.props.history.push('/react/work_preference_overview')
+        this.props.history.push('/work_preference_overview')
       } else {
         alert("failed to log in");
       }

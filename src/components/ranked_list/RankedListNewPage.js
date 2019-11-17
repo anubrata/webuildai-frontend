@@ -3,52 +3,31 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { ACTION_TYPES } from "../../store";
 import LoadingSpinner from "../general/LoadingSpinner";
+import { API } from "../../api";
 
 class RLNew extends React.Component {
     getPairwiseComparisons = () => {
-        fetch(`/api/v1/ranked_list/new?category=${this.props.category}&round=${this.props.round}`)
-            .then(response => response.json())
+        API.getRLPairwiseComparisons({ category: this.props.category, round: this.props.round })
             .then((data) => {
                 const comps = JSON.parse(data.pairwiseComparisons);
                 this.props.setPairwiseComparisons(comps.comparisons);
-                // this.props.setMLServerUrl(data.serverUrl);
             }) // loading state
             .catch(error => console.log(error))
     }
 
     getSamples = () => {
-        fetch('/api/v1/ranked_list/generate_samples', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                category: this.props.category,
-                round: this.props.round,
-            })
+        API.generateRLSamples({ category: this.props.category, round: this.props.round }).then((data) => {
+            console.log('generated samples', data);
+            // this.props.setRankedList(JSON.parse(data));
+            this.trainModel(data)
+            this.props.setRanklistId(data.ranklistId);
         })
-            .then(response => response.json())
-            .then((data) => {
-                console.log('generated samples', data);
-                // this.props.setRankedList(JSON.parse(data));
-                this.trainModel(data)
-                this.props.setRanklistId(data.ranklistId);
-            })
-            .catch(error => console.log(error))
+        .catch(error => console.log(error))
     }
 
     evaluateModel = (samples) => {
         // while (!this.state.isModelTrained) continue;
-        fetch(this.props.mlServerUrl + "/evaluate", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Data-Type': 'json',
-            },
-            body: JSON.stringify({ data: samples })
-        })
-            .then(response => response.json())
+        API.evaluateModel(samples)
             .then((data) => {
                 console.log("rankedlist:", data);
                 this.setState({ isLoading: false });
@@ -68,27 +47,18 @@ class RLNew extends React.Component {
     }
 
     trainModel = (samples) => {
-        fetch(this.props.mlServerUrl + "/train", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Data-Type': 'json',
-            },
-            body: JSON.stringify({
-                data: {
-                    comparisons: this.props.pairwiseComparisons.map(this.getPairwiseFeatures),
-                    feedback_round: this.props.round,
-                    request_type: this.props.category,
-                    participant_id: this.props.participantId,
-                },
-            })
+        const train_data = {
+            comparisons: this.props.pairwiseComparisons.map(this.getPairwiseFeatures),
+            feedback_round: this.props.round,
+            request_type: this.props.category,
+            participant_id: this.props.participantId,
+        };
+        API.trainModel(train_data)
+        .then((data) => {
+            console.log("weights", data);
+            this.props.setModelWeights(data.weights);
+            this.evaluateModel(samples);
         })
-            .then(response => response.json())
-            .then((data) => {
-                console.log("weights", data);
-                this.props.setModelWeights(data.weights);
-                this.evaluateModel(samples);
-            })
     }
 
     updateModelRanks = (order, samples, scores) => {

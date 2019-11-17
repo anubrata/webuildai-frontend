@@ -9,6 +9,7 @@ import CircleThree from '../../images/numbers-03.png';
 import CircleFour from '../../images/numbers-04.png';
 import CircleFive from '../../images/numbers-05.png';
 import DndIndicator from '../../images/dndIndicator.png';
+import { API } from "../../api";
 // import Scenario from "./Scenario";
 
 class RLView extends React.Component {
@@ -34,8 +35,7 @@ class RLView extends React.Component {
   }
 
   getFeatureWeights = () => {
-    fetch(`/api/v1/ranked_list/obtain_weights?category=${this.props.category}`)
-      .then(response => response.json())
+    API.getFeatureWeights({ category: this.props.category })
       .then((data) => {
         this.setState({ featureWeights: data.featureWeights});
       })
@@ -49,14 +49,7 @@ class RLView extends React.Component {
       ranklistId: this.props.ranklistId,
       category: this.props.category,
     };
-    fetch('/api/v1/ranked_list/save_human_weights', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
+    API.saveHumanWeights(data)
     .then(response => response.json())
       .then(() => {
         if (callback) callback();
@@ -81,7 +74,7 @@ class RLView extends React.Component {
         callback = () => {
           this.props.setRound(0);
           this.props.setCategory('driver');
-          this.props.history.push('/react/social_preference_overview');
+          this.props.history.push('/social_preference_overview');
         }
       } else {
         callback = () => {
@@ -103,7 +96,7 @@ class RLView extends React.Component {
     if (this.props.category === 'request') {
       this.props.setRound(0);
       this.props.setCategory('driver');
-      this.props.history.push('/react/social_preference_overview');
+      this.props.history.push('/social_preference_overview');
     } else {
       this.props.endFlow();
       this.props.history.push('done')

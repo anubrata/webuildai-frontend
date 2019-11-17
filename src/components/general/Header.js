@@ -1,29 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { ACTION_TYPES } from '../../store';
+import { API } from '../../api';
+import { TESTING_ADMINS } from '../../constants';
 
 class HeaderComponent extends React.Component {
 
 
   logout = () => {
     this.props.setLogout();
-    this.props.history.push('/react/');
-    fetch('/api/v1/sessions/logout', {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then(response => response.json()).then(() => console.log("logged out!") // not sure if we need to do this
-    );
-    if ([1,2,3,4,5,6,7,8,9,10].includes(this.props.participantId)) {
-      fetch('/api/v1/testing/reset', {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      }).then(response => response.json()).then(() => alert("and reset everything")); // not sure if we need to do this
+    this.props.history.push('/');
+    API.logout().then(() => console.log("logged out!"));
+    if (TESTING_ADMINS.includes(this.props.participantId)) {
+      API.testReset(this.props.participantId).then(() => alert("and reset everything"));
     }
   }
 

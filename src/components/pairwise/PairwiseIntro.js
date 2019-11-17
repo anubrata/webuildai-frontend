@@ -5,6 +5,7 @@ import SocialRanking from "../../images/Social_Ranking.png";
 import { connect } from "react-redux";
 import { ACTION_TYPES } from '../../store';
 import LoadingSpinner from '../general/LoadingSpinner';
+import { API } from "../../api";
 
 class PWIntro extends React.Component {
 
@@ -16,18 +17,7 @@ class PWIntro extends React.Component {
   }
 
   createAndFetchPairwiseComparisons = () => {
-    fetch('/api/v1/pairwise_comparisons/generate_pairwise_comparisons', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        category: this.props.category,
-        // selected_features: this.props.features.map(f => f.id),
-      })
-    })
-      .then(response => response.json())
+      API.generatePairwiseComparisons({ category: this.props.category })
       .then((data) => {
         this.setState({loading: false});
         console.log('generated pairwise', data);

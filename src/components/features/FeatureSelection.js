@@ -6,26 +6,7 @@ import FeatureGroup from "./FeatureGroup";
 import NewFeatureModal from "./NewFeatureModal";
 import ReactModal from 'react-modal';
 import { ACTION_TYPES } from "../../store";
-
-
-  // function post_weights(user, feature, weight)
-  // {
-  //   console.log(feature)
-
-  //   $.ajax({
-  //     url: "/weighting?feature_id="+feature+"
-  // &weight="+weight+"&method="+'how_you',
-  //     type: "post",
-  //     success: function(){
-  //       console.log('Saved Successfully');
-  //       //window.location.href = "/pairwise_comparisons"
-  //     },
-  //     error:function($xhr){
-  //       console.log($xhr);
-  //     }
-  //   });
-  // }
-
+import {API} from "../../api";
 
 class FeatSelection extends React.Component {
 
@@ -38,14 +19,7 @@ class FeatSelection extends React.Component {
   }
 
   fetchFeatures = () => {
-    fetch(`/api/v1/features/get_all_features_shuffled?category=${this.props.category}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
+    API.getFeatures({category: this.props.category})
       .then((data) => {
         console.log("gottem", data);
         this.setState({allFeatures: data.features_by_description});
@@ -75,15 +49,11 @@ class FeatSelection extends React.Component {
   }
 
   saveWeights = (feat) => {
-    fetch('/api/v1/features/new_weight', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({feature_id: feat.id, weight: feat.weight, category: this.props.category})
+    API.createWeight({
+      feature_id: feat.id,
+      weight: feat.weight,
+      category: this.props.category,
     })
-    .then(response => response.json())
     .then((data) => {
       console.log('made feature', data);
       // TODO: can use feature data here
@@ -126,15 +96,7 @@ class FeatSelection extends React.Component {
 
   createNewFeat = (feat) => {
     // this will also update the weight
-    fetch('/api/v1/features/new_feature', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(feat)
-    })
-    .then(response => response.json())
+    API.createFeature(feat)
     .then((data) => {
       console.log('made feature', data);
       // TODO: can use feature data here
@@ -181,7 +143,7 @@ class FeatSelection extends React.Component {
   finishFeatureSelection = () => {
     this.createNewFeatures();
     this.saveAllWeights();
-    this.props.history.push('/react/pairwise_comparisons/intro');
+    this.props.history.push('/pairwise_comparisons/intro');
   }
 
   renderDescription = () => {

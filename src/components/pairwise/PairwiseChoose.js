@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PairwiseComparison from "./PairwiseComparison";
 import { ACTION_TYPES } from '../../store';
+import { API } from "../../api";
 
 class PWChoose extends React.Component {
   constructor(props) {
@@ -21,17 +22,10 @@ class PWChoose extends React.Component {
     this.props.pairwiseComparisons[this.state.comparisonNum].choice = choice === -1 ? null : choice;
     const id = this.props.pairwiseComparisons[this.state.comparisonNum].id
     this.setState({choice: null, comparisonNum: oldComparisonNum+1 < this.props.pairwiseComparisons.length ? oldComparisonNum + 1 : oldComparisonNum}, () => {
-      fetch('/api/v1/pairwise_comparisons/update_choice', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({pairwise_id: id, choice, reason: this.state.reason }),
-      })
+      API.updateChoice({ pairwise_id: id, choice, reason: this.state.reason})
       .then(() => {
         if (oldComparisonNum+1 >= this.props.pairwiseComparisons.length) {
-          this.props.history.push('/react/ranked_list/new');
+          this.props.history.push('/ranked_list/new');
         }
         this.props.setPairwiseComparisons(this.props.pairwiseComparisons);
       })
@@ -50,19 +44,12 @@ class PWChoose extends React.Component {
   skipChoosing = () => {
     for (let i = 0; i < this.props.pairwiseComparisons.length; i++) {
       this.props.pairwiseComparisons[i].choice = 1
-      fetch('/api/v1/pairwise_comparisons/update_choice', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pairwise_id: this.props.pairwiseComparisons[i].id, choice: 1, reason: 'test' }),
-        })
+      API.updateChoice({ pairwise_id: this.props.pairwiseComparisons[i].id, choice: 1, reason: 'test' })
           .then()
           .catch(err => console.log(err));
     }
     this.props.setPairwiseComparisons(this.props.pairwiseComparisons);
-    this.props.history.push('/react/ranked_list/new');
+    this.props.history.push('/ranked_list/new');
   }
 
   onReasonChange = (event) => {

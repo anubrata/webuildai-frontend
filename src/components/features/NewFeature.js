@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { ACTION_TYPES } from '../../store';
 import ContinuousFeatureModal from './ContinuousFeatureModal';
 import CategoricalFeatureModal from './CategoricalFeatureModal';
+import { API } from '../../api';
 
 class NewFeat extends React.Component {
   constructor(props) {
@@ -16,31 +17,16 @@ class NewFeat extends React.Component {
   }
 
   componentWillMount() {
-    fetch('/api/v1/sessions/get_id', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
+    API.getParticipantId().then(data => {
       console.log("received:", data);
       this.props.setParticipantId(data.participantId);
     })
   }
 
-  createNewFeat = (isCategorical, feat) => {
+  createNewFeat = (feat, isCategorical) => {
+    feat = { ...feat, cat: isCategorical ? 1 : 0 };
     // this will also update the weight
-    fetch('/api/v1/features/new_feature', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({...feat, cat: isCategorical ? 1 : 0, feature_only: true })
-    })
-    .then(response => response.json())
+    API.createFeature(feat)
     .then((data) => {
       console.log('made feature', data);
       // TODO: can use feature data here
