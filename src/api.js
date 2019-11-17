@@ -1,4 +1,4 @@
-import { mockFeatures, mockPairwiseComparisons, mockSamples, mockFeatureWeights, mockOrder, mockModelWeights } from "./mocks";
+import { mockFeatures, mockPairwiseComparisons, mockSamples, mockFeatureWeights, mockOrder, mockModelWeights, mockScores } from "./mocks";
 import { TESTING_ADMINS } from "./constants";
 
 
@@ -112,7 +112,7 @@ const MOCK_API = {
   generateRLSamples: ({ category, round })  => Promise.resolve(mockSamples),
   saveHumanWeights: (data) => Promise.resolve({ status: 'saved successfully '}),
   getFeatureWeights: ({ category }) => Promise.resolve(mockFeatureWeights),
-  evaluateModel: (samples) => Promise.resolve({ order: mockOrder, samples: mockSamples }),
+  evaluateModel: (samples) => Promise.resolve({ order: mockOrder, scores: mockScores }),
   trainModel: (data) => Promise.resolve(mockModelWeights),
 };
 
