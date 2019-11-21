@@ -1,41 +1,63 @@
 import { mockFeatures, mockPairwiseComparisons, mockSamples, mockFeatureWeights, mockOrder, mockModelWeights, mockScores } from "./mocks";
-import { TESTING_ADMINS } from "./constants";
+import { TESTING_ADMINS, HEADERS } from "./constants";
 
+const API_URL = 'http://localhost:5000';
 
-const headers = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-};
+const headers = HEADERS
 
 const PROD_API = {
-    createWeight: ({ feature_id, weight, category }) => fetch('/api/v1/features/new_weight', {
+    // NEW: GOOD
+    getFeatures: ({ category, user_id }) => fetch(`${API_URL}/get_features_for_user?category=${category}&user_id=${user_id}`, {
+      method: 'GET',
+      headers,
+    }).then(response => response.json()),
+
+    // NEW: GOOD
+    createFeature: ({ feature, session }) => fetch(`${API_URL}/new_feature`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ feature, session })
+    }).then(response => response.json()),
+
+    // NEW: GOOD
+    saveFeatureWeights: ({ new_features, feature_weights, session }) => fetch(`${API_URL}/save_feature_weights`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ new_features, feature_weights, session })
+    }).then(response => response.json()),
+
+    // NEW: GOOD
+    generatePairwiseComparisons: ({ category, num_comps, session }) => fetch(`${API_URL}/generate_pairwise_comparisons`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ category, num_comps, session })
+    }).then(response => response.json()),
+
+    // NEW: GOOD
+    updateChoice: ({ pairwise_id, choice, reason }) => fetch(`${API_URL}/update_choice`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({pairwise_id, choice, reason }),
+      }).then(response => response.json()),
+
+    // THE REST OF THESE ARE UNTOUCHED + need to be modified
+    createWeight: ({ feature_id, weight, category }) => fetch(`${API_URL}/features/new_weight`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ feature_id, weight, category })
     }).then(response => response.json()),
 
-    getFeatures: ({ category }) => fetch(`/api/v1/features/get_all_features_shuffled?category=${category}`, {
+    getParticipantId: () => fetch(`${API_URL}/sessions/get_id`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
-    createFeature: (feat) => fetch('/api/v1/features/new_feature', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(feat)
-    }).then(response => response.json()),
-
-    getParticipantId: () => fetch('/api/v1/sessions/get_id', {
-      method: 'GET',
-      headers,
-    }).then(response => response.json()),
-
-    logout: () => fetch('/api/v1/sessions/logout', {
+    logout: () => fetch(`${API_URL}/sessions/logout`, {
       method: "POST",
       headers,
     }).then(response => response.json()),
 
-    login: (request) => fetch("/api/v1/sessions/login", {
+    login: (request) => fetch(`${API_URL}/sessions/login`, {
       method: "POST",
       headers,
       body: JSON.stringify(request),
@@ -43,7 +65,7 @@ const PROD_API = {
 
     testReset: (id) => {
       if (TESTING_ADMINS.includes(id)) {
-        return fetch('/api/v1/testing/reset', {
+        return fetch(`${API_URL}/testing/reset`, {
           method: "POST",
           headers,
         }).then(response => response.json())
@@ -51,47 +73,35 @@ const PROD_API = {
       return Promise.resolve({ status: "error"})
     },
 
-    updateChoice: ({ pairwise_id, choice, reason }) => fetch('/api/v1/pairwise_comparisons/update_choice', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({pairwise_id, choice, reason }),
-      }).then(response => response.json()),
-
-    generatePairwiseComparisons: ({ category }) => fetch('/api/v1/pairwise_comparisons/generate_pairwise_comparisons', {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ category })
-    }).then(response => response.json()),
-
-    getRLPairwiseComparisons: ({ category, round }) => fetch(`/api/v1/ranked_list/new?category=${category}&round=${round}`, {
+    getRLPairwiseComparisons: ({ category, round }) => fetch(`${API_URL}/ranked_list/new?category=${category}&round=${round}`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
-    generateRLSamples: ({ category, round }) => fetch('/api/v1/ranked_list/generate_samples', {
+    generateRLSamples: ({ category, round }) => fetch(`${API_URL}/ranked_list/generate_samples`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ category, round })
     }).then(response => response.json()),
 
-    saveHumanWeights: (data) => fetch('/api/v1/ranked_list/save_human_weights', {
+    saveHumanWeights: (data) => fetch(`${API_URL}/ranked_list/save_human_weights`, {
       method: 'POST',
       headers,
       body: JSON.stringify(data),
     }).then(response => response.json()),
 
-    getFeatureWeights: ({ category }) => fetch(`/api/v1/ranked_list/obtain_weights?category=${category}`, {
+    getFeatureWeights: ({ category }) => fetch(`${API_URL}/ranked_list/obtain_weights?category=${category}`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
-    evaluateModel: (samples) => fetch("/api/v1/evaluate", {
+    evaluateModel: (samples) => fetch(`${API_URL}/evaluate`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ data: samples })
     }).then(response => response.json()),
 
-    trainModel: (data) => fetch(this.props.mlServerUrl + "/train", {
+    trainModel: (data) => fetch(`${API_URL}/train`, {
             method: 'POST',
             headers,
             body: JSON.stringify({ data })
@@ -116,4 +126,5 @@ const MOCK_API = {
   trainModel: (data) => Promise.resolve(mockModelWeights),
 };
 
-export const API = MOCK_API; // or PROD_API
+// export const API = MOCK_API;
+export const API = PROD_API;
