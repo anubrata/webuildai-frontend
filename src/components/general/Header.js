@@ -20,7 +20,7 @@ class HeaderComponent extends React.Component {
     return (
       <nav className="white">
         <div className="nav-wrapper">
-          <div className="col s12" style={{paddingLeft: "70px", paddingRight: "70px"}}>
+          <div className="col s12" style={{marginLeft:"5%", paddingRight: "70px", paddingTop: "10px",}}>
             <span style={{color: "#555", fontSize: "30px", fontWeight: "bold"}}>WeBuildAI</span>
             <ul id="nav-mobile" className="right">
               {this.props.isLoggedIn &&

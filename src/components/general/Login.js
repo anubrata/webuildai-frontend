@@ -115,7 +115,7 @@ class LoginComponent extends React.Component {
               </div>
             </div>
             <div className={styles.loginBtn}>
-              <a onClick={this.login} className="login-button">Login</a>
+              <a onClick={this.login} >Login</a>
             </div>
         </div>
       </div>

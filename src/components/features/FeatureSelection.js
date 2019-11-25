@@ -7,6 +7,7 @@ import NewFeatureModal from "./NewFeatureModal";
 import ReactModal from 'react-modal';
 import { ACTION_TYPES } from "../../store";
 import {API} from "../../api";
+import styles from '../../styles/FeatureSelection.module.css';
 
 class FeatSelection extends React.Component {
 
@@ -149,28 +150,29 @@ class FeatSelection extends React.Component {
   renderDescription = () => {
     let description = "";
     if (this.props.category == 'request') {
-      description = <p className = "feature-text" >
+      description = <p className={styles.text}>
                       Your company uses an algorithm to match you with potential customers.
                       The boxes below contain features we believe your company’s algorithm uses. Based on your experiences,
-                      <b> please select any features that you would consider important if you were to make an algorithm for youself.</b>
+                      {/* This is getting a new line for some reason */}
+                      <strong>please select any features that you would consider important if you were to make an algorithm for youself.</strong>
                     </p>;
     } else {
-      description = <p className = "feature-text" >
+      description = <p className={styles.text}>
                       Work distribution means which driver should receive the request when there are multiple drivers waiting for a ping.
                       In other words, <b>you act as the algorithm in this section.</b>
                     </p>;
     }
     return (
       <div>
-        <h3 className="title">Feature Selection for Your {this.props.category === 'request' ? "Work Preference" : "Work Distribution"} Preference Model</h3>
-        <hr className = "feature-hr"/>
+        <p className={styles.title}>Feature Selection for Your {this.props.category === 'request' ? "Work Preference" : "Work Distribution"} Preference Model</p>
+        <hr/>
         {description}
-        <div className="feature-image-block">
-          <p className = "feature-text">
+        <div className={styles.row}>
+          <p className={styles.text} style={{marginTop:"5%",}}>
             Please use the sliders to mark how important each factor should be (0: Not Important - 1: Essential).
             If there other features you believe the algorithm should use, please add your own at the bottom of the page.
           </p>
-          <img src={FeatureSelectionImg} className="feature-selection-image" />
+          <img src={FeatureSelectionImg} className={styles.featureSelectionImage} />
         </div>
       </div>
     );
@@ -196,8 +198,8 @@ class FeatSelection extends React.Component {
         {this.renderFeatures()}
 
         <br/><br/>
-        <a id="add" className="btn-floating btn-large waves-effect waves-light" onClick={this.openModal} style={{zIndex:0, backgroundColor:"#3d6ab1", marginLeft:"10%"}}>
-          <i className="material-icons">add</i>
+        <a id="add" className={styles.addBtn} onClick={this.openModal} >
+          <i className="material-icons">+</i>
         </a>
         <p style={{fontWeight:"bold", fontSize:"1.25em", display:"inline", marginLeft:"1%"}}>
           Add Feature
@@ -221,7 +223,7 @@ class FeatSelection extends React.Component {
 
 
             */}
-            <a onClick={this.finishFeatureSelection} className="next-button">
+            <a onClick={this.finishFeatureSelection} className={styles.nextBtn}>
               NEXT
             </a>
             {/* <a onClick={this.props.end} className="btn">hi</a> */}
