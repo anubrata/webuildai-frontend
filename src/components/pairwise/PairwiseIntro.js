@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { ACTION_TYPES } from '../../store';
 import LoadingSpinner from '../general/LoadingSpinner';
 import { API } from "../../api";
+import styles from '../../styles/PairwiseIntro.module.css';
 
 class PWIntro extends React.Component {
 
@@ -45,23 +46,20 @@ class PWIntro extends React.Component {
   }
 
   render() {
-    let title = "";
     let part = "";
     let partDescription = "";
     let image = PersonalPref;
     if (this.props.category === 'request') {
-      title = <h3 className="title">Training Your Work Preference Model</h3>;
-      part = <p className="pg-1-subheader"> Part 1. Personal Preference </p>;
-      partDescription = <p className="feature-text">
+      part = <p className={styles.subheader}> Part 1. Personal Preference </p>;
+      partDescription = <p className={styles.text}>
                           Please assume that the algorithm notifies you of two potential requests.
                           <b> Please choose which request you would prefer the algorithm to match you with. </b>
                           The information below are features you believe that algorithm should consider.
                         </p>
     } else {
-      title = <h3 className="title">Training Your Work Distribution Model</h3>;
-      part = <p className="pg-1-subheader"> Part 2. Social Ranking </p>;
+      part = <p className={styles.subheader}> Part 2. Social Ranking </p>;
       image = SocialRanking;
-      partDescription = <p className="feature-text">
+      partDescription = <p className={styles.text}>
                           Please assume that you are the algorithm and you have to assign a request to a driver.
                           <b> Please choose which driver you would prefer the algorithm to give the request. </b>
                           The information below are features you believe that algorithm should consider.
@@ -70,28 +68,28 @@ class PWIntro extends React.Component {
 
     return (
       <div id="pg_1" >
-        {title}
-        <hr className="feature-hr" />
+        <p className={styles.title}>Training Your {this.props.category === 'request' ? "Work Preference" : "Work Distribution"} Model</p>
+        <hr />
         <br />
-        <p className="feature-text">
+        <p className={styles.text}>
           We are now going to give you some sets of hypothetical scenarios based on your chosen features.
           Each set will have two options, and it is up to your discretion to choose which is the better option.
           Your decisions will be used to help train our own matching algorithm.
         </p>
         <br /> <br /> <br />
         <br /> <br /> <br />
-        <div className="pg-1-image-block">
-          <div className="text-image-container">
+        <div className={styles.imgBlock} >
+          <div className={styles.textContainer} >
             {part}
             {partDescription}
           </div>
-          <img src={image} className="personal-pref-image" />
+          <img src={image} className={styles.img} />
         </div>
-        <p className="pg-1-subheader">Scenarios will include: </p>
+        <p className={styles.subheader}>Scenarios will include: </p>
         {this.renderSelectedFeatures()}
         {
           this.state.loading ? <LoadingSpinner /> : (
-            <a className="waves-effect waves-dark start_btn btn" id="start_btn_1" onClick={this.onClick} style={{ marginBottom:"5%", }}> Start </a>
+            <a className={styles.nextBtn} id="start_btn_1" onClick={this.onClick} style={{ marginBottom:"5%", }}> Start </a>
           )
         }
       </div>

@@ -164,7 +164,7 @@ class FeatSelection extends React.Component {
     }
     return (
       <div>
-        <p className={styles.title}>Feature Selection for Your {this.props.category === 'request' ? "Work Preference" : "Work Distribution"} Preference Model</p>
+        <p className={styles.title}>Feature Selection for Your {this.props.category === 'request' ? "Work Preference" : "Work Distribution"} Model</p>
         <hr/>
         {description}
         <div className={styles.row}>
@@ -172,7 +172,7 @@ class FeatSelection extends React.Component {
             Please use the sliders to mark how important each factor should be (0: Not Important - 1: Essential).
             If there other features you believe the algorithm should use, please add your own at the bottom of the page.
           </p>
-          <img src={FeatureSelectionImg} className={styles.featureSelectionImage} />
+          <img src={FeatureSelectionImg} className={styles.img} />
         </div>
       </div>
     );
