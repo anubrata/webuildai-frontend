@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ACTION_TYPES } from '../../store';
 import { API } from '../../api';
+import styles from '../../styles/Login.module.css';
 
 class LoginComponent extends React.Component {
 
@@ -78,11 +79,10 @@ class LoginComponent extends React.Component {
 
   render() {
     return (
-      <div className="row" style={{marginBottom:"0px"}} >
-        <button onClick={this.testClick}>Click me</button>
-        <div className="login-b2">
-          <h3> Help us understand how algorithms affect you.</h3>
-          <p>
+      <div className={styles.row} style={{marginBottom:"0px"}} >
+        <div className={styles.loginLeft}>
+          <h3 className={styles.title}> Help us understand how algorithms affect you.</h3>
+          <p className={styles.text}>
             Thank you for voluntarily participating in our research. The goal of this
             online session is understand your work practice around your
             company’s in-app algorithm, which matches drivers with potential
@@ -90,7 +90,7 @@ class LoginComponent extends React.Component {
             about their companies’ current algorithmic systems and thus greatly
             appreciate your input.
           </p>
-          <p>
+          <p className={styles.text}>
             There are no risks or benefits to participating in this session. Any data
             collected from this session will be stored confidentially and
             anonymously and only shared within our research team at Carnegie
@@ -98,29 +98,25 @@ class LoginComponent extends React.Component {
             choosing as a show of our appreciation for your time.
           </p>
         </div>
-        <div className="login-b1">
-          <div>
-            <div>
-              <span>Login</span>
-              <hr id='hhr' />
-              <div className="control-group-id">
-                <label>ID</label>
-                <div className="controls">
-                  <input onChange={this.setId} type="text" placeholder="ID" />
-                </div>
-              </div>
-              <br />
-              <div className="control-group-password">
-                <label>Password</label>
-                <div className="controls">
-                  <input onChange={this.setPassword} onKeyDown={this.onKeyDown} type="password" placeholder="Password" />
-                </div>
-              </div>
-              <div className="actions-login">
-                <a onClick={this.login} className="login-button">Login</a>
+        <div className={styles.loginRight}>
+            <p className={styles.login}>Login</p>
+            <hr className={styles.hr}/>
+            <div className={styles.controlGroup}>
+              <label>ID</label>
+              <div className="controls">
+                <input onChange={this.setId} type="text" placeholder="ID" />
               </div>
             </div>
-          </div>
+            <br />
+            <div className={styles.controlGroup}>
+              <label>Password</label>
+              <div className="controls">
+                <input onChange={this.setPassword} onKeyDown={this.onKeyDown} type="password" placeholder="Password" />
+              </div>
+            </div>
+            <div className={styles.loginBtn}>
+              <a onClick={this.login} className="login-button">Login</a>
+            </div>
         </div>
       </div>
     )
