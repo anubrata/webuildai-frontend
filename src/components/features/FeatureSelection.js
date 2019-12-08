@@ -19,9 +19,8 @@ class FeatSelection extends React.Component {
   }
 
   fetchFeatures = () => {
-    API.getFeatures({category: this.props.category})
+    API.getFeatures(this.props.category, this.props.sessionId)
       .then((data) => {
-        console.log("gottem", data);
         this.setState({allFeatures: data.features_by_description});
       })
       .catch(error => console.log(error))
@@ -105,7 +104,7 @@ class FeatSelection extends React.Component {
   }
 
   createNewFeatures = () => {
-    const keys = ['Your Own Feature(s) - Categorical', 'Your Own Feature(s) - Continuous']
+    const keys = ['Your Own Feature(s) - Categorical', 'Your Own Feature(s) - Continuous'];
     const cat_key = keys[0];
     const cat_vals = this.state.allFeatures[cat_key];
     const cont_key = keys[1];
@@ -233,6 +232,7 @@ class FeatSelection extends React.Component {
 const mapStoreStateToProps = (state, givenProps) => {
   return {
     ...givenProps,
+    sessionId: state.sessionId,
     category: state.category,
   }
 }

@@ -51,7 +51,7 @@ class RLNew extends React.Component {
             comparisons: this.props.pairwiseComparisons.map(this.getPairwiseFeatures),
             feedback_round: this.props.round,
             request_type: this.props.category,
-            participant_id: this.props.participantId,
+            user_id: this.props.participantId,
         };
         API.trainModel(train_data)
         .then((data) => {

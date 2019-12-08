@@ -26,6 +26,7 @@ class NewFeat extends React.Component {
   createNewFeat = (feat, isCategorical) => {
     feat = { ...feat, cat: isCategorical ? 1 : 0 };
     // this will also update the weight
+    console.log(feat);
     API.createFeature(feat)
     .then((data) => {
       console.log('made feature', data);
@@ -85,6 +86,7 @@ NewFeat.propTypes = {
 const mapStoreStateToProps = (storeState, props) => {
   return {
     participantId: storeState.participantId,
+    sessionId: storeState.sessionId,
     ...props
   }
 }

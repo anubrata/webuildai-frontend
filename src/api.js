@@ -2,32 +2,33 @@ import { mockFeatures, mockPairwiseComparisons, mockSamples, mockFeatureWeights,
 import { TESTING_ADMINS, HEADERS } from "./constants";
 
 const API_URL = 'http://localhost:5000';
+// const session = 1;
 
 const headers = HEADERS
 
 const PROD_API = {
     // NEW: GOOD
-    getFeatures: ({ category, user_id }) => fetch(`${API_URL}/get_features_for_user?category=${category}&user_id=${user_id}`, {
+    getFeatures: (category, session) => fetch(`${API_URL}/get_features_for_user?category=${category}&session=${session}`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
     // NEW: GOOD
-    createFeature: ({ feature, session }) => fetch(`${API_URL}/new_feature`, {
+    createFeature: (feature, session) => fetch(`${API_URL}/new_feature`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ feature, session })
     }).then(response => response.json()),
 
     // NEW: GOOD
-    saveFeatureWeights: ({ new_features, feature_weights, session }) => fetch(`${API_URL}/save_feature_weights`, {
+    saveFeatureWeights: (new_features, feature_weights, session) => fetch(`${API_URL}/save_feature_weights`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ new_features, feature_weights, session })
     }).then(response => response.json()),
 
     // NEW: GOOD
-    generatePairwiseComparisons: ({ category, num_comps, session }) => fetch(`${API_URL}/generate_pairwise_comparisons`, {
+    generatePairwiseComparisons: (category, num_comps, session) => fetch(`${API_URL}/generate_pairwise_comparisons`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ category, num_comps, session })
@@ -57,7 +58,7 @@ const PROD_API = {
       headers,
     }).then(response => response.json()),
 
-    login: (request) => fetch(`${API_URL}/sessions/login`, {
+    login: (request) => fetch(`${API_URL}/login`, {
       method: "POST",
       headers,
       body: JSON.stringify(request),
@@ -73,35 +74,36 @@ const PROD_API = {
       return Promise.resolve({ status: "error"})
     },
 
-    getRLPairwiseComparisons: ({ category, round }) => fetch(`${API_URL}/ranked_list/new?category=${category}&round=${round}`, {
+    /* These functions have been modified */
+    getRLPairwiseComparisons: ({ category, round, session }) => fetch(`${API_URL}/ranked_list/new?category=${category}&round=${round}&session=${session}`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
-    generateRLSamples: ({ category, round }) => fetch(`${API_URL}/ranked_list/generate_samples`, {
+    generateRLSamples: ({ category, round, session }) => fetch(`${API_URL}/ranked_list/generate_samples`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ category, round })
+      body: JSON.stringify({ category, round, session })
     }).then(response => response.json()),
 
-    saveHumanWeights: (data) => fetch(`${API_URL}/ranked_list/save_human_weights`, {
+    saveHumanWeights: (data, session) => fetch(`${API_URL}/ranked_list/save_human_weights?session=${session}`, {
       method: 'POST',
       headers,
       body: JSON.stringify(data),
     }).then(response => response.json()),
 
-    getFeatureWeights: ({ category }) => fetch(`${API_URL}/ranked_list/obtain_weights?category=${category}`, {
+    getFeatureWeights: (category, session) => fetch(`${API_URL}/ranked_list/obtain_weights?category=${category}&session=${session}`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
-    evaluateModel: (samples) => fetch(`${API_URL}/evaluate`, {
+    evaluateModel: (samples, session) => fetch(`${API_URL}/ranked_list/evaluate?session_id=${session}`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ data: samples })
     }).then(response => response.json()),
 
-    trainModel: (data) => fetch(`${API_URL}/train`, {
+    trainModel: (data, session) => fetch(`${API_URL}/ranked_list/train?session=${session}`, {
             method: 'POST',
             headers,
             body: JSON.stringify({ data })
