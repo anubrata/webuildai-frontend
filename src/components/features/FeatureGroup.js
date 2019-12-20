@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 class FeatureGroup extends React.Component {
 
   onWeightChange = (i) => {
+    // console.log(this.props.features);
     return (e) => {
       const weight = e.target.value;
       this.props.changeWeight(i, weight);
@@ -48,6 +49,7 @@ FeatureGroup.propTypes = {
   description: PropTypes.string.isRequired,
   features: PropTypes.any.isRequired,
   changeWeight: PropTypes.func.isRequired,
+  
 }
 
 export default FeatureGroup;

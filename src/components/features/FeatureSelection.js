@@ -21,6 +21,9 @@ class FeatSelection extends React.Component {
   fetchFeatures = () => {
     API.getFeatures(this.props.category, this.props.sessionId)
       .then((data) => {
+        data.features_by_description.map((feature) => {
+            feature.weight = 0;
+        })
         this.setState({allFeatures: data.features_by_description});
       })
       .catch(error => console.log(error))
@@ -32,8 +35,9 @@ class FeatSelection extends React.Component {
 
   changeWeight = (description) => {
     return (i, weight) => {
-      const feats = {...this.state.allFeatures};
-      feats[description][i].weight = weight;
+      const feats = [...this.state.allFeatures];
+      feats[i].weight = weight;
+      console.log(feats);
       this.setState({allFeatures: feats});
       console.log('changed weight', feats, feats[description][i]);
     }
@@ -52,6 +56,7 @@ class FeatSelection extends React.Component {
       feature_id: feat.id,
       weight: feat.weight,
       category: this.props.category,
+      session: this.props.sessionId,
     })
     .then((data) => {
       console.log('made feature', data);
@@ -60,27 +65,53 @@ class FeatSelection extends React.Component {
     .catch(e => console.log(e))
   }
 
+  saveFeatureWeight = (feat) => {
+
+    API.saveWeight(feat.id, feat.weight, this.props.sessionId, this.props.category)
+    .then((data) => {
+        console.log("Feature has been saved.");
+    })
+    .catch(e => console.log(e))
+  }
+
   saveAllWeights = () => {
     const customs = ['Your Own Feature(s) - Categorical' , 'Your Own Feature(s) - Continuous'];
-    for (let description of Object.keys(this.state.allFeatures)) {
-      if (!customs.includes(description)) {
-        const feats = this.state.allFeatures[description];
-        for (let feat of feats) {
-          if (feat.weight > 0)
+    for (let feat of this.state.allFeatures) {
+        if (feat.weight > 0 && !customs.includes(feat.description)) {
             this.saveWeights(feat);
         }
-      }
     }
-    const allFeatsList = [];
-    for (let description of Object.keys(this.state.allFeatures)) {
-      const feats = this.state.allFeatures[description];
-      for (let feat of feats) {
-        if (feat.weight > 0)
-          allFeatsList.push(feat);
-      }
+
+    const allFeats = [];
+    for (let f of this.state.allFeatures) {
+        if (f.weight > 0) { allFeats.push(f); }
     }
-    this.props.setSelectedFeatures(allFeatsList);
+
+    this.props.setSelectedFeatures(allFeats);
   }
+
+  // saveAllWeights = () => {
+    
+  //   for (let description of Object.keys(this.state.allFeatures)) {
+  //     if (!customs.includes(description)) {
+  //       const feats = this.state.allFeatures[description];
+  //       for (let feat of feats) {
+  //         if (feat.weight > 0)
+  //           this.saveWeights(feat);
+  //       }
+  //     }
+  //   }
+
+  //   const allFeatsList = [];
+  //   for (let description of Object.keys(this.state.allFeatures)) {
+  //     const feats = this.state.allFeatures[description];
+  //     for (let feat of feats) {
+  //       if (feat.weight > 0)
+  //         allFeatsList.push(feat);
+  //     }
+  //   }
+  //   this.props.setSelectedFeatures(allFeatsList);
+  // }
 
   addFeature = (isCategorical, features) => {
     const featType = isCategorical ? 'Your Own Feature(s) - Categorical' : 'Your Own Feature(s) - Continuous';
@@ -95,7 +126,7 @@ class FeatSelection extends React.Component {
 
   createNewFeat = (feat) => {
     // this will also update the weight
-    API.createFeature(feat)
+    API.createFeature(feat, this.props.sessionId)
     .then((data) => {
       console.log('made feature', data);
       // TODO: can use feature data here
@@ -180,7 +211,7 @@ class FeatSelection extends React.Component {
       return (
         <FeatureGroup
           description={description}
-          features={this.state.allFeatures[description]}
+          features={this.state.allFeatures}
           changeWeight={this.changeWeight(description)}
           key={i}
         />

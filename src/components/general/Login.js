@@ -26,7 +26,7 @@ class LoginComponent extends React.Component {
 
   login = () => {
     const request = { auth: { id: this.state.id, password: this.state.password } };
-    // console.log(request)
+
     API.login(request)
     .then(result => {
       if (result.status === 'ok') {
@@ -34,6 +34,8 @@ class LoginComponent extends React.Component {
         this.props.setParticipantId(Number(this.state.id));
         // console.log(result.session);
         this.props.setSessionId(Number(result.session));
+        this.props.setJwtToken(result.access_token);
+        this.props.setJwtRefreshToken(result.refresh_token);
         this.props.history.push('/work_preference_overview');
       } else {
         alert("failed to log in");
@@ -139,6 +141,8 @@ const mapDispatchToProps = (dispatch) => {
     setLogin: () => dispatch({ type: ACTION_TYPES.SET_LOGIN, payload: true }),
     setParticipantId: (payload) => dispatch({type: ACTION_TYPES.SET_PARTICIPANT_ID, payload }),
     setSessionId: (payload) => dispatch({type: ACTION_TYPES.SET_SESSION_ID, payload}),
+    setJwtToken: (payload) => dispatch({type: ACTION_TYPES.SET_JWT_TOKEN, payload}),
+    setJwtRefreshToken: (payload) => dispatch({type: ACTION_TYPES.SET_JWT_REFRESH_TOKEN, payload}),
   };
 }
 

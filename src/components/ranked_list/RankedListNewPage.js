@@ -7,7 +7,7 @@ import { API } from "../../api";
 
 class RLNew extends React.Component {
     getPairwiseComparisons = () => {
-        API.getRLPairwiseComparisons({ category: this.props.category, round: this.props.round })
+        API.getRLPairwiseComparisons(this.props.category, this.props.round, this.props.sessionId)
             .then((data) => {
                 const comps = JSON.parse(data.pairwiseComparisons);
                 this.props.setPairwiseComparisons(comps.comparisons);
@@ -16,18 +16,18 @@ class RLNew extends React.Component {
     }
 
     getSamples = () => {
-        API.generateRLSamples({ category: this.props.category, round: this.props.round }).then((data) => {
+        API.generateRLSamples({ category: this.props.category, round: this.props.round, session: this.props.sessionId }).then((data) => {
             console.log('generated samples', data);
             // this.props.setRankedList(JSON.parse(data));
+            this.props.setRanklistId(data.ranklist_id);
             this.trainModel(data)
-            this.props.setRanklistId(data.ranklistId);
         })
         .catch(error => console.log(error))
     }
 
     evaluateModel = (samples) => {
         // while (!this.state.isModelTrained) continue;
-        API.evaluateModel(samples)
+        API.evaluateModel(samples, this.props.sessionId)
             .then((data) => {
                 console.log("rankedlist:", data);
                 this.setState({ isLoading: false });
@@ -50,8 +50,10 @@ class RLNew extends React.Component {
         const train_data = {
             comparisons: this.props.pairwiseComparisons.map(this.getPairwiseFeatures),
             feedback_round: this.props.round,
-            request_type: this.props.category,
+            category: this.props.category,
             user_id: this.props.participantId,
+            session: this.props.sessionId,
+            ranklist_id: this.props.ranklistId,
         };
         API.trainModel(train_data)
         .then((data) => {
@@ -134,6 +136,8 @@ const mapStoreStateToProps = (storeState, givenProps) => {
         mlServerUrl: storeState.model_url || 'https://webuildai-ml-server.herokuapp.com',
         participantId: storeState.participantId,
         model_weights: storeState.model_weights,
+        sessionId: storeState.sessionId,
+        ranklistId: storeState.ranklistId,
     };
 }
 

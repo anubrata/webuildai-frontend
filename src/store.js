@@ -18,6 +18,8 @@ const INITIAL_STATE = {
     featureWeights: {},
     isLoggedIn: false,
     sessionId: 0,
+    jwtToken: "",
+    jwtRefreshToken: "",
 };
 
 export const ACTION_TYPES = {
@@ -34,6 +36,8 @@ export const ACTION_TYPES = {
     SET_FEATURE_WEIGHTS: 'SET_FEATURE_WEIGHTS',
     SET_LOGIN: 'SET_LOGIN',
     SET_SESSION_ID: 'SET_SESSION_ID',
+    SET_JWT_TOKEN: 'SET_JWT_TOKEN',
+    SET_JWT_REFRESH_TOKEN: 'SET_JWT_REFRESH_TOKEN',
 };
 
 const rootReducer = (state, action) => {
@@ -79,6 +83,12 @@ const rootReducer = (state, action) => {
             return oldState;
         case ACTION_TYPES.SET_SESSION_ID:
             oldState.sessionId = payload;
+            return oldState;
+        case ACTION_TYPES.SET_JWT_TOKEN:
+            oldState.jwtToken = payload;
+            return oldState;
+        case ACTION_TYPES.SET_JWT_REFRESH_TOKEN:
+            oldState.jwtRefreshToken = payload;
             return oldState;
         default:
             return state;

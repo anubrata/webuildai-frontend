@@ -35,7 +35,7 @@ class RLView extends React.Component {
   }
 
   getFeatureWeights = () => {
-    API.getFeatureWeights({ category: this.props.category })
+    API.getFeatureWeights(this.props.category, this.props.sessionId)
       .then((data) => {
         this.setState({ featureWeights: data.featureWeights});
       })
@@ -130,13 +130,13 @@ class RLView extends React.Component {
   }
 
   renderFeatures = (rle) => {
-    return rle.features.map((feature, i) => {
-      return (
-        <div key={`${rle.id}_feature_${i}`}>
-            <p className="feature-value"> {feature.feat_value} </p>
-            {feature.feat_unit && <p className="feature-value"> &nbsp;{feature.feat_unit} </p>}
-        </div>
-      );
+    return Object.keys(rle.features).map((i, feat) => {
+        return (
+          <div key={`${rle.id}_feature_${i}`}>
+            <p className="feature-value"> {feat.value} </p>
+            {feat.unit && <p className="feature-value"> &nbsp;{feat.unit} </p>} 
+          </div>
+        );
     });
   }
 
@@ -158,12 +158,13 @@ class RLView extends React.Component {
       return <div></div>;
     }
     const elem = this.state.rankedList[0];
-    return elem.features.map((feature, i) => {
-      return (
-        <div key={`${elem.id}_feature_${i}`}>
-          <p className="rl-feature-name">  {feature.feat_name} </p>
-        </div>
-      );
+    return Object.keys(elem).map((i, feat) => {
+        return (
+          <div key={`${elem.id}_feature_${i}`}>
+            <p className="rl-feature-name"> {feat.name} </p>
+          </div>
+
+        );
     });
   }
 
@@ -328,6 +329,7 @@ const mapStoreStateToProps = (storeState, givenProps) => {
     pairwiseComparisons: storeState.pairwiseComparisons,
     featureWeights: storeState.featureWeights,
     model_weights: storeState.model_weights,
+    sessionId: storeState.sessionId,
   }
 }
 

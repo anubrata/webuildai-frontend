@@ -17,7 +17,7 @@ class PWIntro extends React.Component {
   }
 
   createAndFetchPairwiseComparisons = () => {
-      API.generatePairwiseComparisons({ category: this.props.category })
+      API.generatePairwiseComparisons(this.props.category, 3, this.props.sessionId)
       .then((data) => {
         this.setState({loading: false});
         console.log('generated pairwise', data);
@@ -110,6 +110,7 @@ const mapStoreStateToProps = (state, givenProps) => {
     history: givenProps.history,
     features: state.selectedFeatures,
     category: state.category,
+    sessionId: state.sessionId,
   };
 }
 

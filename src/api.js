@@ -27,11 +27,17 @@ const PROD_API = {
       body: JSON.stringify({ new_features, feature_weights, session })
     }).then(response => response.json()),
 
+    saveWeight: (feature_id, feature_weight, session, category) => fetch(`${API_URL}/save_weight?session=${session}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({category, feature_id, feature_weight})
+    }).then(response => response.json()),
+
     // NEW: GOOD
-    generatePairwiseComparisons: (category, num_comps, session) => fetch(`${API_URL}/generate_pairwise_comparisons`, {
+    generatePairwiseComparisons: (category, num_comps, session) => fetch(`${API_URL}/generate_pairwise_comparisons?session=${session}`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ category, num_comps, session })
+      body: JSON.stringify({ category, num_comps })
     }).then(response => response.json()),
 
     // NEW: GOOD
@@ -42,7 +48,7 @@ const PROD_API = {
       }).then(response => response.json()),
 
     // THE REST OF THESE ARE UNTOUCHED + need to be modified
-    createWeight: ({ feature_id, weight, category }) => fetch(`${API_URL}/features/new_weight`, {
+    createWeight: ({ feature_id, weight, category, session }) => fetch(`${API_URL}/create_weight?session=${session}`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ feature_id, weight, category })
@@ -75,35 +81,35 @@ const PROD_API = {
     },
 
     /* These functions have been modified */
-    getRLPairwiseComparisons: ({ category, round, session }) => fetch(`${API_URL}/ranked_list/new?category=${category}&round=${round}&session=${session}`, {
+    getRLPairwiseComparisons: (category, round, session) => fetch(`${API_URL}/new_ranklist?category=${category}&round=${round}&session=${session}`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
-    generateRLSamples: ({ category, round, session }) => fetch(`${API_URL}/ranked_list/generate_samples`, {
+    generateRLSamples: ({ category, round, session }) => fetch(`${API_URL}/generate_samples`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ category, round, session })
     }).then(response => response.json()),
 
-    saveHumanWeights: (data, session) => fetch(`${API_URL}/ranked_list/save_human_weights?session=${session}`, {
+    saveHumanWeights: (data, session) => fetch(`${API_URL}/save_human_weights?session=${session}`, {
       method: 'POST',
       headers,
       body: JSON.stringify(data),
     }).then(response => response.json()),
 
-    getFeatureWeights: (category, session) => fetch(`${API_URL}/ranked_list/obtain_weights?category=${category}&session=${session}`, {
+    getFeatureWeights: (category, session) => fetch(`${API_URL}/obtain_weights?category=${category}&session=${session}`, {
       method: 'GET',
       headers,
     }).then(response => response.json()),
 
-    evaluateModel: (samples, session) => fetch(`${API_URL}/ranked_list/evaluate?session_id=${session}`, {
+    evaluateModel: (samples, session) => fetch(`${API_URL}/evaluate?session=${session}`, {
       method: 'POST',
       headers,
       body: JSON.stringify({ data: samples })
     }).then(response => response.json()),
 
-    trainModel: (data, session) => fetch(`${API_URL}/ranked_list/train?session=${session}`, {
+    trainModel: (data, session) => fetch(`${API_URL}/train?session=${session}`, {
             method: 'POST',
             headers,
             body: JSON.stringify({ data })
