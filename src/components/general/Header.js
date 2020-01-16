@@ -2,18 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ACTION_TYPES } from '../../store';
 import { API } from '../../api';
-import { TESTING_ADMINS } from '../../constants';
+import { TESTING_ADMINS, HEADERS } from '../../constants';
 
 class HeaderComponent extends React.Component {
 
 
   logout = () => {
+    let jwtHeader = {...HEADERS, 'Authorization': `Bearer ${this.props.jwtToken}`};
+    let jwtRefreshHeader = {...HEADERS, 'Authorization': `Bearer ${this.props.jwtRefreshToken}`};
     this.props.setLogout();
-    this.props.history.push('/');
-    API.logout().then(() => console.log("logged out!"));
-    if (TESTING_ADMINS.includes(this.props.participantId)) {
-      API.testReset(this.props.participantId).then(() => alert("and reset everything"));
-    }
+    // console.log(header);
+    API.logout(jwtHeader).then(() => {
+        API.destroyRefresh(jwtRefreshHeader).then(() => console.log("yaYEET"));
+    });
+    // if (TESTING_ADMINS.includes(this.props.participantId)) {
+    //   API.testReset(this.props.participantId).then(() => alert("and reset everything"));
+    // }
+    window.location.replace('http://localhost:3000/');
+    return false;
   }
 
   render () {
@@ -38,6 +44,8 @@ const mapStoreStateToProps = (storeState, givenProps) => {
     ...givenProps,
     isLoggedIn: storeState.isLoggedIn,
     participantId: storeState.participantId,
+    jwtToken: storeState.jwtToken,
+    jwtRefreshToken: storeState.jwtRefreshToken,
   };
 }
 

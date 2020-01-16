@@ -13,6 +13,7 @@ import NewFeature from './components/features/NewFeature';
 import Header from "./components/general/Header";
 
 const Routes = ({ match, history }) => {
+  console.log(history);
   return (
     <React.Fragment>
       <Header history={history} />

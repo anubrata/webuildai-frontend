@@ -59,9 +59,14 @@ const PROD_API = {
       headers,
     }).then(response => response.json()),
 
-    logout: () => fetch(`${API_URL}/sessions/logout`, {
+    logout: (jwtHeader) => fetch(`${API_URL}/logout`, {
       method: "POST",
-      headers,
+      headers: jwtHeader,
+    }).then(response => response.json()),
+
+    destroyRefresh: (jwtHeader) => fetch(`${API_URL}/destroy_refresh`, {
+      method: "POST",
+      headers: jwtHeader,
     }).then(response => response.json()),
 
     login: (request) => fetch(`${API_URL}/login`, {

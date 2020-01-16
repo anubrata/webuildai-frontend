@@ -8,7 +8,7 @@ class LoginComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: "",
+      email: "",
       password: "",
       sessionId: "",
     };
@@ -19,13 +19,12 @@ class LoginComponent extends React.Component {
     this.setState({password});
   }
 
-  setId = (e) => {
-    const id = e.target.value;
-    this.setState({id});
+  setEmail = (e) => {
+    this.setState({email: e.target.value});
   }
 
   login = () => {
-    const request = { auth: { id: this.state.id, password: this.state.password } };
+    const request = { auth: { email: this.state.email, password: this.state.password } };
 
     API.login(request)
     .then(result => {
@@ -48,6 +47,12 @@ class LoginComponent extends React.Component {
     if (e.key === 'Enter') {
       this.login();
     }
+  }
+
+  autoLogin = () => {
+    this.state.email = "carnegie@andrew.cmu.edu";
+    this.state.password = "cmu123";
+    this.login();
   }
 
   testClick = () => {
@@ -84,7 +89,7 @@ class LoginComponent extends React.Component {
   render() {
     return (
       <div className="row" style={{marginBottom:"0px"}} >
-        <button onClick={this.testClick}>Click me</button>
+        <button onClick={this.autoLogin}>Click me</button>
         <div className="login-b2">
           <h3> Help us understand how algorithms affect you.</h3>
           <p>
@@ -109,9 +114,9 @@ class LoginComponent extends React.Component {
               <span>Login</span>
               <hr id='hhr' />
               <div className="control-group-id">
-                <label>ID</label>
+                <label>Email</label>
                 <div className="controls">
-                  <input onChange={this.setId} type="text" placeholder="ID" />
+                  <input onChange={this.setEmail} type="text" placeholder="Email" />
                 </div>
               </div>
               <br />
