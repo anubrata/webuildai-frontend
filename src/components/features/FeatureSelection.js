@@ -21,8 +21,8 @@ class FeatSelection extends React.Component {
   fetchFeatures = () => {
     API.getFeatures(this.props.category, this.props.sessionId)
       .then((data) => {
-        data.features_by_description.map((feature) => {
-            feature.weight = 0;
+        Object.values(data.features_by_description).map((desc) => {
+            desc.map((feature) => feature.weight = 0)
         })
         this.setState({allFeatures: data.features_by_description});
       })
@@ -35,8 +35,8 @@ class FeatSelection extends React.Component {
 
   changeWeight = (description) => {
     return (i, weight) => {
-      const feats = [...this.state.allFeatures];
-      feats[i].weight = weight;
+      const feats = {...this.state.allFeatures};
+      feats[description][i].weight = weight;
       console.log(feats);
       this.setState({allFeatures: feats});
       console.log('changed weight', feats, feats[description][i]);
@@ -74,44 +74,44 @@ class FeatSelection extends React.Component {
     .catch(e => console.log(e))
   }
 
-  saveAllWeights = () => {
-    const customs = ['Your Own Feature(s) - Categorical' , 'Your Own Feature(s) - Continuous'];
-    for (let feat of this.state.allFeatures) {
-        if (feat.weight > 0 && !customs.includes(feat.description)) {
-            this.saveWeights(feat);
-        }
-    }
-
-    const allFeats = [];
-    for (let f of this.state.allFeatures) {
-        if (f.weight > 0) { allFeats.push(f); }
-    }
-
-    this.props.setSelectedFeatures(allFeats);
-  }
-
   // saveAllWeights = () => {
-    
-  //   for (let description of Object.keys(this.state.allFeatures)) {
-  //     if (!customs.includes(description)) {
-  //       const feats = this.state.allFeatures[description];
-  //       for (let feat of feats) {
-  //         if (feat.weight > 0)
+  //   const customs = ['Your Own Feature(s) - Categorical' , 'Your Own Feature(s) - Continuous'];
+  //   for (let feat of this.state.allFeatures) {
+  //       if (feat.weight > 0 && !customs.includes(feat.description)) {
   //           this.saveWeights(feat);
   //       }
-  //     }
   //   }
 
-  //   const allFeatsList = [];
-  //   for (let description of Object.keys(this.state.allFeatures)) {
-  //     const feats = this.state.allFeatures[description];
-  //     for (let feat of feats) {
-  //       if (feat.weight > 0)
-  //         allFeatsList.push(feat);
-  //     }
+  //   const allFeats = [];
+  //   for (let f of this.state.allFeatures) {
+  //       if (f.weight > 0) { allFeats.push(f); }
   //   }
-  //   this.props.setSelectedFeatures(allFeatsList);
+
+  //   this.props.setSelectedFeatures(allFeats);
   // }
+
+  saveAllWeights = () => {
+    const customs = ['Your Own Feature(s) - Categorical' , 'Your Own Feature(s) - Continuous'];
+    for (let description of Object.keys(this.state.allFeatures)) {
+      if (!customs.includes(description)) {
+        const feats = this.state.allFeatures[description];
+        for (let feat of feats) {
+          if (feat.weight > 0)
+            this.saveWeights(feat);
+        }
+      }
+    }
+
+    const allFeatsList = [];
+    for (let description of Object.keys(this.state.allFeatures)) {
+      const feats = this.state.allFeatures[description];
+      for (let feat of feats) {
+        if (feat.weight > 0)
+          allFeatsList.push(feat);
+      }
+    }
+    this.props.setSelectedFeatures(allFeatsList);
+  }
 
   addFeature = (isCategorical, features) => {
     const featType = isCategorical ? 'Your Own Feature(s) - Categorical' : 'Your Own Feature(s) - Continuous';
@@ -207,15 +207,15 @@ class FeatSelection extends React.Component {
   }
 
   renderFeatures = () => {
-    return Object.keys(this.state.allFeatures).map((description, i) => {
-      return (
-        <FeatureGroup
-          description={description}
-          features={this.state.allFeatures}
-          changeWeight={this.changeWeight(description)}
-          key={i}
-        />
-      );
+    return Object.keys(this.state.allFeatures).map((desc, i) => {
+        return (
+                <FeatureGroup
+                  description={desc}
+                  features={this.state.allFeatures[desc]}
+                  changeWeight={this.changeWeight(desc)}
+                  key={i}
+                />
+                )
     });
   }
 

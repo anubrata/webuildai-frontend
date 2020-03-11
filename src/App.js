@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import RankedListFlow from './components/ranked_list/RankedListFlow';
 import LoadingSpinner from "./components/general/LoadingSpinner";
+import Signup from './components/general/Signup'
 import FeatureSelection from './components/features/FeatureSelection';
 import PairwiseComparisonFlow from './components/pairwise/PairwiseComparisonFlow'
 import Overview from './components/general/Overview'
@@ -19,6 +20,7 @@ const Routes = ({ match, history }) => {
       <Header history={history} />
       <Switch>
         <Route exact path='/' component={Login} />
+        <Route path='/signup' component={Signup} />
         <Route path='/feature_selection' component={FeatureSelection} />
 
         <Route path='/work_preference_overview' render={(props) => <Overview {...props} model={"preference"} />} />

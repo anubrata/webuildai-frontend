@@ -49,47 +49,10 @@ class LoginComponent extends React.Component {
     }
   }
 
-  autoLogin = () => {
-    this.state.email = "carnegie@andrew.cmu.edu";
-    this.state.password = "cmu123";
-    this.login();
-  }
-
-  testClick = () => {
-    const session = { user_id: 1, id: 1 };
-    // API.getFeatures({ category: 'request', user_id: 1 }).then(data => console.log("result", data));
-    // return
-    // const feature = (weight) => ({
-    //   description: "test feature",
-    //   name: 'How many dogs',
-    //   category: 'request',
-    //   unit: 'dogs',
-    //   icon: 'd',
-    //   is_categorical: true,
-    //   options: ["a", "b", "c"],
-    //   weight,
-    // })
-    // const feature = ({
-    //   description: "test feature",
-    //   name: 'How many dogs',
-    //   category: 'request',
-    //   unit: 'dogs',
-    //   icon: 'd',
-    //   is_categorical: true,
-    //   options: ["a", "b", "c", "d"],
-    // })
-    // const new_features = [feature(20), feature(80), feature(0)]
-    // const feature_weights = { 1: 3 }
-    // API.saveFeatureWeights({ new_features:[], feature_weights, session }).then(data => console.log(data));
-    // API.createFeature({ feature, session }).then(data => console.log("result", data));
-    // API.generatePairwiseComparisons({ category: 'request', num_comps: 3, session }).then(data => console.log(data));
-    API.updateChoice({ pairwise_id: 3, choice: 1, reason: "foo" }).then(data=>console.log(data));
-  }
-
   render() {
     return (
       <div className="row" style={{marginBottom:"0px"}} >
-        <button onClick={this.autoLogin}>Click me</button>
+        <button onClick={() => this.props.history.push('/signup')}>Signup</button>
         <div className="login-b2">
           <h3> Help us understand how algorithms affect you.</h3>
           <p>

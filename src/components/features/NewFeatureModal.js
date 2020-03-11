@@ -108,9 +108,6 @@ class NewFeatureModal extends React.Component {
             )
           }
 
-            {/* <%= render partial: 'categorical_add.html.erb' %> */}
-            {/* <%= render partial: 'continuous_add.html.erb' %> */}
-
         </div>
       </div>
     );

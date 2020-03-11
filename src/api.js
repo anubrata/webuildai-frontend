@@ -59,20 +59,29 @@ const PROD_API = {
       headers,
     }).then(response => response.json()),
 
+    // Tested
     logout: (jwtHeader) => fetch(`${API_URL}/logout`, {
       method: "POST",
       headers: jwtHeader,
     }).then(response => response.json()),
 
+    // Tested
     destroyRefresh: (jwtHeader) => fetch(`${API_URL}/destroy_refresh`, {
       method: "POST",
       headers: jwtHeader,
     }).then(response => response.json()),
 
+    // Tested
     login: (request) => fetch(`${API_URL}/login`, {
       method: "POST",
       headers,
       body: JSON.stringify(request),
+    }).then(response => response.json()),
+
+    signup: (request) => fetch(`${API_URL}/signup`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(request),
     }).then(response => response.json()),
 
     testReset: (id) => {
